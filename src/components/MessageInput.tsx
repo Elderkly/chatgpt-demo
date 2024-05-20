@@ -1,16 +1,31 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, InputAdornment } from '@mui/material';
+import { TextField, Button, Box, InputAdornment, CircularProgress } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { useMessageContext } from '../contexts/MessageContext';
+import { sendMessage } from '../utils/api';
+import { Message } from '../types/Chat';
 
 const MessageInput: React.FC = () => {
   const [input, setInput] = useState<string>('');
-  const { addMessage } = useMessageContext();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { addMessage, messages } = useMessageContext();
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
-      addMessage({ role: 'user', content: input });
+      setLoading(true); 
+
+      const newMessage: Message = { role: 'user', content: input };
+      addMessage(newMessage);
       setInput('');
+
+      try {
+        const response = await sendMessage([...messages.filter(x => x.role === 'user'), newMessage]);
+        addMessage(response as Message);
+      } catch (error) {
+        console.error('Error sending message:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -36,19 +51,24 @@ const MessageInput: React.FC = () => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <Button
-                sx={{
-                  bgcolor: input.length ? '#000' : '#eee',
-                  borderRadius: '5px',
-                  width: '10px',
-                  '&:hover': {
-                    bgcolor: '#000',
-                  },
-                }}
-                onClick={handleSend}
-              >
-                <ArrowUpwardIcon sx={{ color: '#fff' }} />
-              </Button>
+              {loading ? ( // 根据加载状态显示 loading 指示器或箭头按钮
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                <Button
+                  disabled={loading} // 在加载时禁用按钮
+                  sx={{
+                    bgcolor: input.length ? '#000' : '#eee',
+                    borderRadius: '5px',
+                    width: '10px',
+                    '&:hover': {
+                      bgcolor: '#000',
+                    },
+                  }}
+                  onClick={handleSend}
+                >
+                  <ArrowUpwardIcon sx={{ color: '#fff' }} />
+                </Button>
+              )}
             </InputAdornment>
           ),
         }}

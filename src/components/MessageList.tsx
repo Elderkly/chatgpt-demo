@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography } from '@mui/material';
 import { useMessageContext } from '../contexts/MessageContext';
 
 const MessageList: React.FC = () => {
   const { messages } = useMessageContext();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   return (
-    <List sx={{ flex: 1, overflowY: 'auto', padding: '10px' }}>
+    <List
+      sx={{ flex: 1, overflowY: 'auto', padding: '10px' }}
+    >
       {messages.map((msg, index) => (
         <ListItem key={index} sx={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
           <ListItemAvatar sx={{ marginTop: '6px' }}>
@@ -21,8 +34,10 @@ const MessageList: React.FC = () => {
           />
         </ListItem>
       ))}
+      <div ref={messagesEndRef} />
     </List>
   );
 };
+
 
 export default MessageList;
