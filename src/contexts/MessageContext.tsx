@@ -11,7 +11,7 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   return (
-    <MessageContext.Provider value={{ messages, addMessage } as MessageContextType}>
+    <MessageContext.Provider value={{ messages, addMessage }}>
       {children}
     </MessageContext.Provider>
   );

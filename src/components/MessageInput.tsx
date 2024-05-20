@@ -51,11 +51,11 @@ const MessageInput: React.FC = () => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              {loading ? ( // 根据加载状态显示 loading 指示器或箭头按钮
+              {loading ? (
                 <CircularProgress size={24} color="inherit" />
               ) : (
                 <Button
-                  disabled={loading} // 在加载时禁用按钮
+                  disabled={loading}
                   sx={{
                     bgcolor: input.length ? '#000' : '#eee',
                     borderRadius: '5px',

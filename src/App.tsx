@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Paper, Modal, TextField, Button, Typography } from '@mui/material';
+import { Container, Paper } from '@mui/material';
 import MessageList from './components/MessageList';
 import MessageInput from './components/MessageInput';
 import { MessageProvider } from './contexts/MessageContext';
-import ApiKeyModal from './components/ApiKeyModal'; // 新添加的组件
+import ApiKeyModal from './components/ApiKeyModal';
 
 const App: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
