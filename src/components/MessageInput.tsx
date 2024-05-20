@@ -22,7 +22,7 @@ const MessageInput: React.FC = () => {
         const response = await sendMessage([...messages.filter(x => x.role === 'user'), newMessage]);
         addMessage(response as Message);
       } catch (error) {
-        console.error('Error sending message:', error);
+        alert(error)
       } finally {
         setLoading(false);
       }
