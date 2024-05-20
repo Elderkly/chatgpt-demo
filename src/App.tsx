@@ -3,9 +3,9 @@ import { Container, Paper, TextField, Button, List, ListItem, ListItemAvatar, Av
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import './App.css';
 import { sendMessage } from './utils/api';
-import { MessageProvider } from './contexts/MessageContext';
-import MessageList from './components/MessageList';
-import MessageInput from './components/MessageInput';
+// import { MessageProvider } from './contexts/MessageContext';
+// import MessageList from './components/MessageList';
+// import MessageInput from './components/MessageInput';
 import { Message } from './types/Chat';
 
 function App() {
