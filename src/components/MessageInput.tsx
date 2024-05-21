@@ -1,16 +1,28 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, InputAdornment, CircularProgress } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { useMessageContext } from '../contexts/MessageContext';
+import PauseIcon from '@mui/icons-material/Pause'
 import { sendMessage } from '../utils/api';
-import { Message } from '../types/Chat';
+import { Message } from '../types';
+import useTypingEffectService from '../hook/useTypingEffectService';
+import useMessageContext from '../hook/useMessageContext';
+import useDialogContext from '../hook/useDialogContext';
+import TypingEffectService from '../service/TypingEffectService';
 
 const MessageInput: React.FC = () => {
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const { addMessage, messages } = useMessageContext();
+  const { openDialog } = useDialogContext()
+  const typing = useTypingEffectService()
 
-  const handleSend = async () => {
+  const handleSendClick = async () => {
+    if (typing) {
+      console.log('stop', typing)
+      TypingEffectService.setTyping(false)
+      return
+    }
+
     if (input.trim()) {
       setLoading(true); 
 
@@ -21,8 +33,8 @@ const MessageInput: React.FC = () => {
       try {
         const response = await sendMessage([...messages.filter(x => x.role === 'user'), newMessage]);
         addMessage(response as Message);
-      } catch (error) {
-        alert(error)
+      } catch (error: any) {
+        openDialog('Error', error.message)
       } finally {
         setLoading(false);
       }
@@ -36,7 +48,7 @@ const MessageInput: React.FC = () => {
         placeholder="Message ChatGPT..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        onKeyPress={(e) => e.key === 'Enter' ? handleSend() : null}
+        onKeyPress={(e) => e.key === 'Enter' ? handleSendClick() : null}
         sx={{
           flex: 1,
           marginRight: '8px',
@@ -57,16 +69,18 @@ const MessageInput: React.FC = () => {
                 <Button
                   disabled={loading}
                   sx={{
-                    bgcolor: input.length ? '#000' : '#eee',
+                    bgcolor: input.length || typing ? '#000' : '#eee',
                     borderRadius: '5px',
                     width: '10px',
                     '&:hover': {
                       bgcolor: '#000',
                     },
                   }}
-                  onClick={handleSend}
+                  onClick={handleSendClick}
                 >
-                  <ArrowUpwardIcon sx={{ color: '#fff' }} />
+                  {
+                    typing ? <PauseIcon sx={{ color: '#fff' }}/> : <ArrowUpwardIcon sx={{ color: '#fff' }} />
+                  }
                 </Button>
               )}
             </InputAdornment>

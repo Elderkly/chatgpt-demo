@@ -1,7 +1,7 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { Message, MessageContextType } from '../types/Chat';
+import React, { createContext, useState, ReactNode } from 'react';
+import { Message, MessageContextType } from '../types';
 
-const MessageContext = createContext<MessageContextType | undefined>(undefined);
+export const MessageContext = createContext<MessageContextType | undefined>(undefined);
 
 export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -15,12 +15,4 @@ export const MessageProvider: React.FC<{ children: ReactNode }> = ({ children })
       {children}
     </MessageContext.Provider>
   );
-};
-
-export const useMessageContext = (): MessageContextType => {
-  const context = useContext(MessageContext);
-  if (!context) {
-    throw new Error('useMessageContext must be used within a MessageProvider');
-  }
-  return context;
 };

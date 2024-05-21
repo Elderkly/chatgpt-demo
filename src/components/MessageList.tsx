@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography } from '@mui/material';
-import { useMessageContext } from '../contexts/MessageContext';
+import TypingEffect from './TypingEffect';
+import useMessageContext from '../hook/useMessageContext';
 
 const MessageList: React.FC = () => {
   const { messages } = useMessageContext();
@@ -29,7 +30,7 @@ const MessageList: React.FC = () => {
           </ListItemAvatar>
           <ListItemText
             primary={<Typography variant="subtitle1" fontWeight="bold">{msg.role === 'assistant' ? 'ChatGPT' : 'You'}</Typography>}
-            secondary={msg.content}
+            secondary={msg.role === 'assistant' ? <TypingEffect text={msg.content}/> : msg.content}
             sx={{ textAlign: 'left', maxWidth: '75%' }}
           />
         </ListItem>

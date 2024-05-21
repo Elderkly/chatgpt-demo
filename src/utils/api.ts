@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { Message } from "../types/Chat";
+import { Message } from "../types";
 
 let openaiClient: OpenAI | null = null;
 
