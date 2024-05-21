@@ -28,8 +28,3 @@ export async function sendMessage(messages: Message[]) {
 
   return completion.choices[0].message;
 }
-
-
-
-
-    // apiKey: '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',
